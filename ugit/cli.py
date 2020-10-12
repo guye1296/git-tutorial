@@ -1,5 +1,6 @@
 import argparse
 import os
+import sys
 from . import data
 
 
@@ -16,6 +17,10 @@ def parse_args() -> argparse.Namespace:
     hash_object_parser.set_defaults(func=hash_object)
     hash_object_parser.add_argument('file')
 
+    cat_file_parser = commands.add_parser('cat-file')
+    cat_file_parser.set_defaults(func=cat_file)
+    cat_file_parser.add_argument('object')
+
     return parser.parse_args()
 
 
@@ -27,6 +32,12 @@ def init(args):
 def hash_object(args):
     with open(args.file, 'rb') as file:
         print(data.hash_object(file.read()))
+
+
+def cat_file(args):
+    object_data = data.cat_file(args.object)
+    sys.stdout.buffer.write(object_data)
+    sys.stdout.flush()
 
 
 def main():
